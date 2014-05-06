@@ -1,0 +1,6 @@
+CHANGELOG
+
+v0.1
+ - Move in main the train's thread start.
+ - Use Lazy initialization in Controlador creation.
+ - convert static objects in Controlador's objects.

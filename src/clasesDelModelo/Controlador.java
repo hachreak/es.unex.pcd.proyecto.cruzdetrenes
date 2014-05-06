@@ -13,25 +13,27 @@ public class Controlador {
 	 * De ahora en adelante, en el c�digo, la estacion de la izquierda (asi como su via asociada) 
 	 * se identificara con el 0, y la estacion de la derecha, con el 1.
 	 */
+
+	private static final int RETARDO_DE_VISUALIZACION = 1200;
 	
 	private static final int NUM_TRENES_SEGUIDOS_MISMO_SENTIDO = 5;
 		
-	private static int[] numTrenesPasando;
-	private static int[] numTrenesEsperando;
-	private static int[] numTrenesDePasajerosEsperando;
-	private static int numTrenesSeguidosMismoSentido;
-	private static int sentido; // 0 para la via horizontal, 1 para la vertical, -1 cuando aun no ha sido definido
+	private int[] numTrenesPasando;
+	private int[] numTrenesEsperando;
+	private int[] numTrenesDePasajerosEsperando;
+	private int numTrenesSeguidosMismoSentido;
+	private int sentido; // 0 para la via horizontal, 1 para la vertical, -1 cuando aun no ha sido definido
 	
-	private static Sensor[] sensoresVia;
-	private static Semaforo[][] semaforos;
+	private Sensor[] sensoresVia;
+	private Semaforo[][] semaforos;
 	
 	private static Controlador controlador = null;
-	private static Ventana ventana;
+	private Ventana ventana;
 	
 	/* Este objeto auxiliar lo usaremos para la sincronizacion de las variables compartidas en todo el programa */
-	private static Semaphore mutexVariablesCompartidas;
+	private Semaphore mutexVariablesCompartidas;
 	
-	private static int retardoVisualizacion;
+	private int retardoVisualizacion;
 	
 	public Controlador(int retardo) {
 		if(controlador == null) {
@@ -178,23 +180,23 @@ public class Controlador {
 		System.out.println("El turno para entrar a la via lo tienen ahora los trenes de la estacion " + (sentido+1));
 	}
 	
-	public static int[] getNumTrenesPasando() {
+	public int[] getNumTrenesPasando() {
 		return numTrenesPasando;
 	}
 
-	public static Ventana getVentana() {
+	public Ventana getVentana() {
 		return ventana;
 	}
 	
-	public static Sensor[] getSensoresVia() {
+	public Sensor[] getSensoresVia() {
 		return sensoresVia;
 	}
 	
-	public static Semaforo[][] getSemaforos() {
+	public Semaforo[][] getSemaforos() {
 		return semaforos;
 	}
 	
-	public static Semaphore getMutexVariablesCompartidas() {
+	public Semaphore getMutexVariablesCompartidas() {
 		return mutexVariablesCompartidas;
 	}
 	
@@ -205,12 +207,12 @@ public class Controlador {
 		return null;
 	}
 	
-	public static void imprimir(String cadena) {
+	public void imprimir(String cadena) {
 		System.out.println(cadena);
 		ventana.addTexto(cadena + '\n');
 	}
 	
-	public static void retardoVisualizacionAmigable() {
+	public void retardoVisualizacionAmigable() {
 		try {
 			Thread.sleep(retardoVisualizacion);
 		} catch (InterruptedException e) {
@@ -219,6 +221,10 @@ public class Controlador {
 	}
 	
 	public static Controlador getControlador() {
+		// Lazy initialization
+		if(controlador == null){
+			controlador = new Controlador(RETARDO_DE_VISUALIZACION);
+		}
 		return controlador;
 	}
 

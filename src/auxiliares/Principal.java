@@ -11,13 +11,12 @@ import clasesDelModelo.Tren;
 public class Principal {
 
 	private static final int NUM_MAX_TRENES_POR_ESTACION = 20;
-	private static final int RETARDO_DE_VISUALIZACION = 1200;
+	
 	
 	public static void main(String[] args) {
 		int idTren = 0;
 		Random aleatorios = new Random();
-		new Controlador(RETARDO_DE_VISUALIZACION);
-		Ventana ventana = Controlador.getVentana();		
+		Ventana ventana = Controlador.getControlador().getVentana();		
 		Thread hiloVentana = new Thread(ventana);
 		
 		// Creacion y colocacion aleatoria de los trenes
@@ -31,7 +30,9 @@ public class Principal {
 				} else {
 					tipoTren = Tren.TipoTren.PASAJEROS;
 				}
-				ventana.insertarTrenEnEstacion(new Tren(++idTren, estacion, numViaEstacion, tipoTren));
+				Tren t = new Tren(++idTren, estacion, numViaEstacion, tipoTren);
+				t.start();
+				ventana.insertarTrenEnEstacion(t);
 			}
 		}
 		

@@ -14,15 +14,15 @@ public class Tren extends Thread {
 	private int numViaEstacion;
 	private TipoTren tipoTren;
 	
-	private Thread hiloTren;
+	//private Thread hiloTren;
 	
 	public Tren(int idTren, int numEstacion, int numViaEstacion, TipoTren tipoTren) {
 		this.idTren = idTren;
 		this.numEstacion = numEstacion;
 		this.numViaEstacion = numViaEstacion;
 		this.tipoTren = tipoTren;
-		this.hiloTren = this;
-		this.hiloTren.start();
+		//this.hiloTren = this;
+		//this.hiloTren.start();
 	}
 	
 	public TipoTren getTipoTren() {
@@ -44,18 +44,18 @@ public class Tren extends Thread {
 	public void entrarEnVia() {
 		
 		// Encendemos el semaforo correspondiente, dado que el tren ya puede salir
-		Controlador.getSemaforos()[numEstacion][numViaEstacion].encenderSemaforo();
+		Controlador.getControlador().getSemaforos()[numEstacion][numViaEstacion].encenderSemaforo();
 		
-		Controlador.imprimir("El tren " + idTren + " esta entrando a la via " + (numEstacion+1) + "...");
+		Controlador.getControlador().imprimir("El tren " + idTren + " esta entrando a la via " + (numEstacion+1) + "...");
 		
 		// Retardo de lo que tarda el tren en salir de la estacion a la via
-		Controlador.retardoVisualizacionAmigable();
+		Controlador.getControlador().retardoVisualizacionAmigable();
 		
 		// Apagamos ya el semaforo, puesto que el tren ya ha llegado a la via
-		Controlador.getSemaforos()[numEstacion][numViaEstacion].apagarSemaforo();
+		Controlador.getControlador().getSemaforos()[numEstacion][numViaEstacion].apagarSemaforo();
 		
 		// Retardo de seguridad (no es realmente necesario, pero facilita y mejora la visualizacion)
-		Controlador.retardoVisualizacionAmigable();	
+		Controlador.getControlador().retardoVisualizacionAmigable();	
 		
 		System.out.println("El tren " + idTren + " ha terminado de entrar a la via " + (numEstacion+1));
 		
@@ -73,9 +73,9 @@ public class Tren extends Thread {
 				
 				// Movemos el tren 5 pixeles a cada 100ms para la simulacion grafica
 				if(numEstacion == 0) {
-					Controlador.getVentana().moverTren(this, 1, 0);
+					Controlador.getControlador().getVentana().moverTren(this, 1, 0);
 				} else {
-					Controlador.getVentana().moverTren(this, 0, -1);
+					Controlador.getControlador().getVentana().moverTren(this, 0, -1);
 				}
 			}
 		} catch (InterruptedException e) {
@@ -83,12 +83,12 @@ public class Tren extends Thread {
 		}
 		
 		// El tren ha terminado de cruzar la via y activa el sensor...
-		Controlador.getSensoresVia()[numEstacion].activarSensor();
+		Controlador.getControlador().getSensoresVia()[numEstacion].activarSensor();
 	}
 	
 	@Override
 	public void run() {
-		if(hiloTren == currentThread()) {
+		//if(hiloTren == currentThread()) {
 			
 			// El tren, tras un tiempo a priori desconocido (cuasialeatorio -entre 2000 y 7000 ms-), pide acceso a la via
 			try {
@@ -102,7 +102,7 @@ public class Tren extends Thread {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
+		//}
 	}
 
 	@Override

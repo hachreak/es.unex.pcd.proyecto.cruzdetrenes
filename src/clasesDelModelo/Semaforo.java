@@ -22,7 +22,7 @@ public class Semaforo  {
 		
 		// Si el hilo efectivamente es de tipo tren, procedemos con las acciones del metodo
 		if(tren != null) {
-			Controlador.getVentana().abrirSemaforo(tren);
+			Controlador.getControlador().getVentana().abrirSemaforo(tren);
 			System.out.println("Se enciende el semaforo " + (numVia+1) + " de la estacion " + (numEstacion+1) + ", indicandole al tren " + tren.getIdTren() + " que puede abandonar la estacion y entrar a la via " + (numEstacion+1));
 		}
 	}
@@ -37,8 +37,8 @@ public class Semaforo  {
 		
 		// Si el hilo efectivamente es de tipo tren, procedemos con las acciones del metodo
 		if(tren != null) {
-			Controlador.getVentana().sacarTrenDeEstacion(tren);
-			Controlador.getVentana().cerrarSemaforo(tren.getNumEstacion());
+			Controlador.getControlador().getVentana().sacarTrenDeEstacion(tren);
+			Controlador.getControlador().getVentana().cerrarSemaforo(tren.getNumEstacion());
 			System.out.println("Se apaga el semaforo " + (numVia+1) + " de la estacion " + (numEstacion+1) + " porque el tren " + tren.getIdTren() + " ya ha entrado en la via " + (numEstacion+1));
 		}
 	}

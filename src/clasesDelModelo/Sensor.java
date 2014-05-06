@@ -17,20 +17,20 @@ public class Sensor  {
 		if(tren != null) {
 				
 			// Usamos el semaforo para sincronizar el acceso a la variable compartida "numTrenesPasando"...
-			Controlador.getMutexVariablesCompartidas().acquire();
+			Controlador.getControlador().getMutexVariablesCompartidas().acquire();
 			
-			Controlador.getNumTrenesPasando()[numVia]--;	
+			Controlador.getControlador().getNumTrenesPasando()[numVia]--;	
 			
 			// Soltamos la exclusion mutua del semaforo porque ya hemos accedido a la variable compartida...
-			Controlador.getMutexVariablesCompartidas().release();
+			Controlador.getControlador().getMutexVariablesCompartidas().release();
 			
 			// El sensor se marca como activo
-			Controlador.getVentana().activarSensor(tren);
-			Controlador.imprimir("El tren " + tren.getIdTren() + " esta abandonando la via " + (numVia+1) + "... (detectado por sensor " + (numVia+1) + ")");
+			Controlador.getControlador().getVentana().activarSensor(tren);
+			Controlador.getControlador().imprimir("El tren " + tren.getIdTren() + " esta abandonando la via " + (numVia+1) + "... (detectado por sensor " + (numVia+1) + ")");
 			
 			// Tras un tiempo dado, el sensor se desactiva
-			Controlador.retardoVisualizacionAmigable();
-			Controlador.getVentana().desactivarSensor(tren);
+			Controlador.getControlador().retardoVisualizacionAmigable();
+			Controlador.getControlador().getVentana().desactivarSensor(tren);
 			System.out.println("El tren " + tren.getIdTren() + " ha abandonado la via " + (numVia+1));
 			
 			// Dado que un tren acaba de dejar su via, tenemos que despertar a todos los trenes bloqueados (pues las condiciones han cambiado).
