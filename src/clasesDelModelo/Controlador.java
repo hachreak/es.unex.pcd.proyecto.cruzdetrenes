@@ -5,11 +5,12 @@ import auxiliares.Ventana;
 
 /**
  * Una instancia de esta clase gestiona el trafico de trenes de las dos estaciones.
+ * 
  */
 public class Controlador {
 	
 	/*
-	 * De ahora en adelante, en el código, la estacion de la izquierda (asi como su via asociada) 
+	 * De ahora en adelante, en el cï¿½digo, la estacion de la izquierda (asi como su via asociada) 
 	 * se identificara con el 0, y la estacion de la derecha, con el 1.
 	 */
 	
@@ -81,7 +82,7 @@ public class Controlador {
 			// Soltamos la exclusion mutua del semaforo porque ya hemos accedido a las variables compartidas...
 			mutexVariablesCompartidas.release();
 			
-			// Dos trenes no pueden entrar a la vez, así que protegemos la acción de entrada
+			// Dos trenes no pueden entrar a la vez, asï¿½ que protegemos la acciï¿½n de entrada
 			synchronized(this) {
 				
 				// El tren pide acceso, y se bloqueara (o no) en funcion de las condiciones
