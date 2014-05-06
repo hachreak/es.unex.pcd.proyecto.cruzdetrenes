@@ -16,6 +16,9 @@ public class Controlador {
 
 	private static final int RETARDO_DE_VISUALIZACION = 1200;
 	
+	public static final int NUM_ESTACIONES = 2;
+	public static final int NUM_VIA_CADA_ESTACION = 3;
+	
 	private static final int NUM_TRENES_SEGUIDOS_MISMO_SENTIDO = 5;
 		
 	private int[] numTrenesPasando;
@@ -36,29 +39,31 @@ public class Controlador {
 	private int retardoVisualizacion;
 	
 	public Controlador(int retardo) {
-		if(controlador == null) {
-			controlador = this;
-			numTrenesPasando = new int[2];
-			numTrenesEsperando = new int[2];
-			numTrenesDePasajerosEsperando = new int[2];
-			for(int i=0; i<2; i++) {
+		//if(controlador == null) {
+		//	controlador = this;
+			numTrenesPasando = new int[NUM_ESTACIONES];
+			numTrenesEsperando = new int[NUM_ESTACIONES];
+			numTrenesDePasajerosEsperando = new int[NUM_ESTACIONES];
+			for(int i=0; i<NUM_ESTACIONES; i++) {
 				numTrenesPasando[i] = 0;
 				numTrenesEsperando[i] = 0;
 				numTrenesDePasajerosEsperando[i] = 0;
 			}
 			numTrenesSeguidosMismoSentido = 0;
 			sentido = -1;
-			sensoresVia = new Sensor[2];
-			sensoresVia[0] = new Sensor(0);
-			sensoresVia[1] = new Sensor(1);
-			semaforos = new Semaforo[2][3];
-			for(int i=0; i<2; i++)
-				for(int j=0; j<3; j++)
+			sensoresVia = new Sensor[NUM_ESTACIONES];
+			for(int i=0; i<NUM_ESTACIONES; i++) {
+				sensoresVia[i] = new Sensor(i);				
+			}
+//			sensoresVia[1] = new Sensor(1);
+			semaforos = new Semaforo[NUM_ESTACIONES][NUM_TRENES_SEGUIDOS_MISMO_SENTIDO];
+			for(int i=0; i<NUM_ESTACIONES; i++)
+				for(int j=0; j<NUM_TRENES_SEGUIDOS_MISMO_SENTIDO; j++)
 					semaforos[i][j] = new Semaforo(i, j);
 			ventana = new Ventana();
 			mutexVariablesCompartidas = new Semaphore(1);
 			retardoVisualizacion = retardo;
-		}
+		//}
 	}
 
 	public void accederALaVia() throws InterruptedException {
@@ -66,18 +71,17 @@ public class Controlador {
 		// Si el hilo efectivamente es de tipo tren, procedemos con las acciones del metodo
 		Tren tren = hiloTren();
 		if(tren != null) {
-			
 			// Usamos el semaforo para sincronizar el acceso a las variables compartidas...
 			mutexVariablesCompartidas.acquire();
 			
-			System.out.println("[ El tren " + tren.getIdTren() + ", que esta ubicado en la estacion " + (tren.getNumEstacion()+1) + " y es de " + ((tren.getTipoTren() == Tren.TipoTren.MERCANCIAS) ? "mercancias" : "pasajeros") + ", quiere acceder a la via " + (tren.getNumEstacion()+1) + " ]");			
+			System.out.println("[ El tren " + tren.getIdTren() + ", que esta ubicado en la estacion " + (tren.getNumEstacion()+1) + " y es de " + ((tren.getTipoTren() == TipoTren.MERCANCIAS) ? "mercancias" : "pasajeros") + ", quiere acceder a la via " + (tren.getNumEstacion()+1) + " ]");			
 			ventana.addTrenSolicitante(tren);
 			
 			// Este tren esta esperando a salir de su correspondiente estacion...
 			numTrenesEsperando[tren.getNumEstacion()]++;
 			
 			// Si el tren que quiere pasar es de tipo pasajeros, se indica...
-			if(tren.getTipoTren() == Tren.TipoTren.PASAJEROS) {
+			if(tren.getTipoTren() == TipoTren.PASAJEROS) {
 				numTrenesDePasajerosEsperando[tren.getNumEstacion()]++;
 			}
 			
@@ -95,7 +99,7 @@ public class Controlador {
 				
 				// Si el tren que esta entrando en la via es de tipo pasajeros, se deja constancia...
 				int numTrenesPasajerosRestantes = 9999;
-				if(tren.getTipoTren() == Tren.TipoTren.PASAJEROS) {
+				if(tren.getTipoTren() == TipoTren.PASAJEROS) {
 					numTrenesPasajerosRestantes = numTrenesDePasajerosEsperando[tren.getNumEstacion()]--;
 				}
 				
@@ -135,7 +139,7 @@ public class Controlador {
 		 * - El turno le corresponde a los trenes de la otra estacion y, ademas, en dicha estacion hay trenes esperando para salir
 		 */
 		boolean primerBloqueo = true;
-		while(numTrenesPasando[(1-tren.getNumEstacion())] != 0 || (tren.getTipoTren() == Tren.TipoTren.MERCANCIAS && numTrenesDePasajerosEsperando[tren.getNumEstacion()] > 0) || (sentido == (1-tren.getNumEstacion())) && numTrenesEsperando[(1-tren.getNumEstacion())] > 0) {
+		while(numTrenesPasando[(1-tren.getNumEstacion())] != 0 || (tren.getTipoTren() == TipoTren.MERCANCIAS && numTrenesDePasajerosEsperando[tren.getNumEstacion()] > 0) || (sentido == (1-tren.getNumEstacion())) && numTrenesEsperando[(1-tren.getNumEstacion())] > 0) {
 			// Soltamos la exclusion mutua del semaforo porque ya hemos accedido a las variables compartidas...
 			mutexVariablesCompartidas.release();
 			try {

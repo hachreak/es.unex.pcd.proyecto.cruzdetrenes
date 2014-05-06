@@ -7,8 +7,6 @@ import java.util.Random;
  */
 public class Tren extends Thread {
 	
-	public enum TipoTren {MERCANCIAS, PASAJEROS};
-	
 	private int idTren;
 	private int numEstacion;
 	private int numViaEstacion;

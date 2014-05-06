@@ -1,5 +1,11 @@
 CHANGELOG
 
+v0.2
+ - Move out the enum TipoTren
+ - Add a getRandom() function in TipoTren
+ - externalize the number of estaciones: add static int NUM_ESTACIONES in Controlador.
+ - externalize the number of via for each estacion: add static int NUM_VIA_CADA_ESTACION in Controlador.
+
 v0.1
  - Move in main the train's thread start.
  - Use Lazy initialization in Controlador creation.

@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import clasesDelModelo.Controlador;
 import clasesDelModelo.Tren;
 
 /*
@@ -62,11 +63,11 @@ public class Ventana extends JFrame implements Runnable {
 		panelPrincipal.setBackground(colorFondo);
 		setContentPane(panelPrincipal);
 		
-		listasTrenes = new DefaultListModel[2][3];
-		listScrollers = new JScrollPane[2][3];
-		lists = new JList[2][3];
-		for(int i=0; i<2; i++)
-			for(int j=0; j<3; j++) {
+		listasTrenes = new DefaultListModel[Controlador.NUM_ESTACIONES][Controlador.NUM_VIA_CADA_ESTACION];
+		listScrollers = new JScrollPane[Controlador.NUM_ESTACIONES][Controlador.NUM_VIA_CADA_ESTACION];
+		lists = new JList[Controlador.NUM_ESTACIONES][Controlador.NUM_VIA_CADA_ESTACION];
+		for(int i=0; i<Controlador.NUM_ESTACIONES; i++)
+			for(int j=0; j<Controlador.NUM_VIA_CADA_ESTACION; j++) {
 				listasTrenes[i][j] = new DefaultListModel();
 				JList lista = new JList(listasTrenes[i][j]);
 				lists[i][j] = lista;
@@ -83,12 +84,14 @@ public class Ventana extends JFrame implements Runnable {
 		panelIzquierda.setBackground(colorFondo);
 		semaforosIzquierda = new GridLayout(3, 2, 5, 5);
 		panelIzquierda.setLayout(semaforosIzquierda);
-		panelIzquierda.add(listScrollers[0][0]);
-		panelIzquierda.add(getSemaforoCerrado());
-		panelIzquierda.add(listScrollers[0][1]);
-		panelIzquierda.add(getSemaforoCerrado());
-		panelIzquierda.add(listScrollers[0][2]);
-		panelIzquierda.add(getSemaforoCerrado());
+		for(int i=0; i<Controlador.NUM_VIA_CADA_ESTACION; i++){
+			panelIzquierda.add(listScrollers[0][i]);
+			panelIzquierda.add(getSemaforoCerrado());
+		}
+//		panelIzquierda.add(listScrollers[0][1]);
+//		panelIzquierda.add(getSemaforoCerrado());
+//		panelIzquierda.add(listScrollers[0][2]);
+//		panelIzquierda.add(getSemaforoCerrado());
 		panelIzquierda.setPreferredSize(new Dimension(200, 350));
 		panelPrincipal.add(panelIzquierda, BorderLayout.WEST);
 		
@@ -118,9 +121,11 @@ public class Ventana extends JFrame implements Runnable {
 		
 		leyenda.setForeground(colorFondo);
 		panelInferior.add(leyenda);
-		panelInferior.add(listScrollers[1][0]);
-		panelInferior.add(listScrollers[1][1]);
-		panelInferior.add(listScrollers[1][2]);
+		for(int i=0; i<Controlador.NUM_VIA_CADA_ESTACION; i++){
+			panelInferior.add(listScrollers[1][i]);	
+		}
+//		panelInferior.add(listScrollers[1][1]);
+//		panelInferior.add(listScrollers[1][2]);
 		panelInferior.setPreferredSize(new Dimension(350, 200));
 		panelPrincipal.add(panelInferior, BorderLayout.SOUTH);
 		
